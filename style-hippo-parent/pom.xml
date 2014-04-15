@@ -9,55 +9,6 @@
 	<artifactId>style-hippo-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.12.4</version>
-				<configuration>
-					<excludes>
-						<exclude>**/*IT.java</exclude>
-						<exclude>**/*Tests.java</exclude>
-					</excludes>
-					<argLine>-XX:-UseSplitVerifier</argLine>
-					<forkMode>once</forkMode>					
-				</configuration>
-				<executions>
-					<execution>
-						<id>integration-test</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<phase>integration-test</phase>
-						<configuration>
-							<includes>
-								<include>**/*IT.java</include>
-								<include>**/*Tests.java</include>
-							</includes>
-							<excludes>
-								<exclude>**/*Test.java</exclude>
-							</excludes>
-							<skipTests>${skipIntegration}</skipTests>
-							<argLine>-XX:-UseSplitVerifier</argLine>
-							<forkMode>once</forkMode>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
