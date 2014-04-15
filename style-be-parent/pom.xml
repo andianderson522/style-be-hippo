@@ -3,12 +3,12 @@
 	<parent>
 		<groupId>com.condenast.style.riverhorse</groupId>
 		<artifactId>style-aggregator</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.2-SNAPSHOT</version>
 	</parent>
 	<groupId>com.condenast.style.riverhorse</groupId>
 	<artifactId>style-be-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<build>
 		<plugins>
 			<plugin>
