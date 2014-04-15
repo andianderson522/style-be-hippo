@@ -18,7 +18,9 @@
 					<check>
 						<branchRate>80</branchRate>
 						<lineRate>80</lineRate>
+						<!-- 
 						<haltOnFailure>true</haltOnFailure>
+						 -->
 						<regexes>
 						</regexes>
 					</check>
