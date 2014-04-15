@@ -17,15 +17,14 @@
 				<configuration>
 				
 					<check>
-					<!-- 
-						<branchRate>80</branchRate>
-						<lineRate>80</lineRate>
+						<lineRate>0</lineRate>
+						<packageLineRate>0</packageLineRate>
+						<totalLineRate>0</totalLineRate>
 						
 						<haltOnFailure>true</haltOnFailure>
 						
 						<regexes>
 						</regexes>
-						-->
 					</check>
 					 
 					<formats>
