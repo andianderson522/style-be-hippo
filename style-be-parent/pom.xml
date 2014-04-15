@@ -48,11 +48,49 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>2.7.1</version>
+				<configuration>
+					<targetJdk>1.7</targetJdk>
+					<rulesets>
+						<ruleset>${project.parent.basedir}/../rulesets/basic-rules.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/braces-rules.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/clone-size_ruleset.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/code-size-ruleset.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/controversial-ruleset.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/coupling-ruleset.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/design-rules.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/import-ruleset.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/naming-ruleset.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/optimizations-ruleset.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/pmd-ruleset.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/strict-exceptions-rultset.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/string-ruleset.xml</ruleset>
+						<ruleset>${project.parent.basedir}/../rulesets/unused-code-ruleset.xml</ruleset>
+					</rulesets>
+					<linkXRef>false</linkXRef>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>pmd</groupId>
+			<artifactId>pmd</artifactId>
+			<version>4.3</version>
+			<scope>provided</scope>
+		</dependency> 
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+	</dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
