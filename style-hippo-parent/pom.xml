@@ -2,13 +2,13 @@
 	<parent>
 		<groupId>com.condenast.style.riverhorse</groupId>
 		<artifactId>style-aggregator</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.condenast.style.riverhorse</groupId>
 	<artifactId>style-hippo-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<build>
 		<plugins>
 			<plugin>
