@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns="http://pmd.sf.net/ruleset/1.0.0" name="optimizations-ruleset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd" xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
+<description>Optimizations PMD Rules</description>
+<exclude-pattern>.*</exclude-pattern>
+<include-pattern>.*style3.*.java</include-pattern>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/optimizations.html#UseArrayListInsteadOfVector" message="Use ArrayList instead of Vector" name="UseArrayListInsteadOfVector" since="3.0" typeResolution="true">
+<description>
+ArrayList is a much better Collection implementation than Vector.
+      </description>
+<priority>3</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//AllocationExpression
+ /ClassOrInterfaceType[@Image='Vector' or @Image='java.util.Vector']
+
+              ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class SimpleTest extends TestCase {
+ public void testX() {
+  Collection c = new Vector();
+  // This achieves the same with much better performance
+  // Collection c = new ArrayList();
+ }
+}
+
+          ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/optimizations.html#UseArraysAsList" message="Use asList instead of tight loops" name="UseArraysAsList" since="3.5" typeResolution="true">
+<description>&#13;
+   The class java.util.Arrays has a "asList" method that&#13;
+   should be use when you want to create a new List from&#13;
+   an array of objects. It is faster than executing a loop to&#13;
+   cpy all the elements of the array one by one&#13;
+     </description>
+<priority>3</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//Statement[
+    (ForStatement) and (count(.//IfStatement)=0)
+   ]
+   //StatementExpression[
+    PrimaryExpression/PrimaryPrefix/Name[
+     substring-before(@Image,'.add') = ancestor::MethodDeclaration//LocalVariableDeclaration[
+      ./Type//ClassOrInterfaceType[
+       @Image = 'Collection' or
+       @Image = 'List' or @Image='ArrayList'
+      ]
+     ]
+     /VariableDeclarator/VariableDeclaratorId[
+      count(..//AllocationExpression/ClassOrInterfaceType[
+       @Image="ArrayList"
+      ]
+      )=1
+     ]/@Image
+    ]
+   and
+   PrimaryExpression/PrimarySuffix/Arguments/ArgumentList/Expression/PrimaryExpression/PrimaryPrefix/Name
+   [@Image = ancestor::MethodDeclaration//LocalVariableDeclaration
+   [@Array="true"]/VariableDeclarator/VariableDeclaratorId/@Image]
+   /../..[count(.//PrimarySuffix)
+   =1]/PrimarySuffix/Expression/PrimaryExpression/PrimaryPrefix
+   /Name
+   ]
+
+       ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+   public class Test {
+    public void foo(Integer[] ints) {
+    // could just use Arrays.asList(ints)
+     List l= new ArrayList(10);
+     for (int i=0; i< 100; i++) {
+      l.add(ints[i]);
+     }
+     for (int i=0; i< 100; i++) {
+      l.add(a[i].toString()); // won't trigger the rule
+     }
+    }
+   }
+
+     ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/optimizations.html#AvoidArrayLoops" message="System.arraycopy is more efficient" name="AvoidArrayLoops" since="3.5" typeResolution="true">
+<description>&#13;
+    Instead of copying data between two arrays, use&#13;
+    System.arraycopy method&#13;
+      </description>
+<priority>3</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//Statement[(ForStatement or WhileStatement) and
+count(*//AssignmentOperator[@Image = '='])=1
+and
+*/Statement
+[
+./Block/BlockStatement/Statement/StatementExpression/PrimaryExpression
+/PrimaryPrefix/Name/../../PrimarySuffix/Expression
+[(PrimaryExpression or AdditiveExpression) and count
+(.//PrimaryPrefix/Name)=1]//PrimaryPrefix/Name/@Image
+and
+./Block/BlockStatement/Statement/StatementExpression/Expression/PrimaryExpression
+/PrimaryPrefix/Name/../../PrimarySuffix[count
+(..//PrimarySuffix)=1]/Expression[(PrimaryExpression
+or AdditiveExpression) and count(.//PrimaryPrefix/Name)=1]
+//PrimaryPrefix/Name/@Image
+]]
+
+        ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class Test {
+ public void bar() {
+  int[] a = new int[10];
+  int[] b = new int[10];
+  for (int i=0;i<10;i++) {
+   b[i]=a[i];
+  }
+ }
+}
+            // this will trigger the rule
+            for (int i=0;i<10;i++) {
+             b[i]=a[c[i]];
+            }
+
+        }
+    }
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/optimizations.html#AddEmptyString" message="Do not add empty strings" name="AddEmptyString" since="4.0" typeResolution="true">
+<description>&#13;
+Finds empty string literals which are being added. This is an inefficient way &#13;
+to convert any type to a String.&#13;
+        </description>
+<priority>3</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//AdditiveExpression/PrimaryExpression/PrimaryPrefix/Literal[@Image='""']
+
+                ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+        String s = "" + 123; // bad
+        String t = Integer.toString(456); // ok
+
+        ]]></example>
+</rule>
+</ruleset>

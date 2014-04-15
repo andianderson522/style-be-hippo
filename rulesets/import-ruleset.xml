@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="export-ruleset">
+    <description>Import Rules</description>
+    <exclude-pattern>.*</exclude-pattern>
+    <include-pattern>.*style3.*.java</include-pattern>
+    <rule class="net.sourceforge.pmd.rules.imports.DuplicateImportsRule" message="Avoid duplicate imports such as ''{0}''" name="DuplicateImports">
+        <description>&#xd;
+    Avoid duplicate import statements.&#xd;
+    </description>
+        <example><![CDATA[
+
+import java.lang.String;
+import java.lang.*;
+public class Foo {}
+
+    ]]></example>
+        <priority>1</priority>
+        <properties/>
+    </rule>
+    <rule class="net.sourceforge.pmd.rules.imports.UnusedImportsRule" message="Avoid unused imports such as ''{0}''" name="UnusedImports">
+        <description>
+    Avoid unused import statements.
+    </description>
+        <example><![CDATA[
+
+// this is bad
+import java.io.File;
+public class Foo {}
+
+    ]]></example>
+        <priority>4</priority>
+        <properties/>
+    </rule>
+    <rule class="net.sourceforge.pmd.rules.imports.ImportFromSamePackageRule" message="No need to import a type that lives in the same package" name="ImportFromSamePackage">
+        <description>
+ No need to import a type that lives in the same package.
+     </description>
+        <example><![CDATA[
+
+ package foo;
+ import foo.Buz; // no need for this
+ import foo.*; // or this
+ public class Bar{}
+
+     ]]></example>
+        <priority>3</priority>
+        <properties/>
+    </rule>
+    <rule class="net.sourceforge.pmd.rules.XPathRule" message="Too many static imports may lead to messy code" name="TooManyStaticImports">
+        <description>
+If you overuse the static import feature, it can make your program unreadable and
+unmaintainable, polluting its namespace with all the static members you import.
+Readers of your code (including you, a few months after you wrote it) will not know
+which class a static member comes from (Sun 1.5 Language Guide).
+         </description>
+        <example><![CDATA[
+import static Lennon;
+import static Ringo;
+import static George;
+import static Paul;
+import static Yoko; // Too much !
+          ]]></example>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[
+.[count(ImportDeclaration[@Static = 'true']) > $maximumStaticImports]
+                 ]]></value>
+            </property>
+            <property name="maximumStaticImports" value="4"/>
+        </properties>
+    </rule>
+</ruleset>

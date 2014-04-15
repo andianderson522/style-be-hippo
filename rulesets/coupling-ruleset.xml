@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns="http://pmd.sf.net/ruleset/1.0.0" name="coupling-ruleset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd" xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
+<description>Coupling PMD Rules</description>
+<exclude-pattern>.*</exclude-pattern>
+<include-pattern>.*style3.*.java</include-pattern>
+<rule class="net.sourceforge.pmd.rules.CouplingBetweenObjects" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/coupling.html#CouplingBetweenObjects" message="High amount of different objects as members denotes a high coupling" name="CouplingBetweenObjects" since="1.04" typeResolution="true">
+<description>This rule counts unique attributes, local variables and return types within an object. A number&#13;
+ higher than specified threshold can indicate a high degree of coupling.</description>
+<priority>4</priority>
+<properties>
+<property name="threshold" value="20"/>
+</properties>
+<example><![CDATA[
+
+import com.Blah;
+import org.Bar;
+import org.Bardo;
+public class Foo {
+ private Blah var1;
+ private Bar var2;
+ //followed by many imports of unique objects
+ void ObjectC doWork() {
+  Bardo var55;
+  ObjectA var44;
+  ObjectZ var93;
+  return something;
+ }
+}
+
+    ]]></example>
+<example><![CDATA[import com.Blah;
+import org.Bar;
+import org.Bardo;
+public class Foo {
+ private Blah var1;
+ private Bar var2;
+ //followed by many imports of unique objects
+ void ObjectC doWork() {
+  Bardo var55;
+  ObjectA var44;
+  ObjectZ var93;
+  return something;
+ }
+}]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.design.LooseCoupling" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/coupling.html#LooseCoupling" message="Avoid using implementation types like ''{0}''; use the interface instead" name="LooseCoupling" since="0.7" typeResolution="true">
+<description>Avoid using implementation types (i.e., HashSet); use the interface (i.e, Set) instead</description>
+<priority>1</priority>
+<example><![CDATA[
+
+import java.util.*;
+public class Bar {
+ // Use List instead
+ private ArrayList list = new ArrayList();
+ // Use Set instead
+ public HashSet getFoo() {
+  return new HashSet();
+ }
+}
+
+      ]]></example>
+<example><![CDATA[import java.util.*;
+public class Bar {
+ // Use List instead
+ private ArrayList list = new ArrayList();
+ // Use Set instead
+ public HashSet getFoo() {
+  return new HashSet();
+ }
+}]]></example>
+</rule>
+</ruleset>

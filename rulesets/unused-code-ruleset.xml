@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns="http://pmd.sf.net/ruleset/1.0.0" name="unused-code-ruleset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd" xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
+<description>Unused Code PMD Rules</description>
+<exclude-pattern>.*</exclude-pattern>
+<include-pattern>.*style3.*.java</include-pattern>
+<rule class="net.sourceforge.pmd.rules.UnusedPrivateFieldRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedPrivateField" message="Avoid unused private fields such as ''{0}''." name="UnusedPrivateField" since="0.1" typeResolution="true">
+<description>
+Detects when a private field is declared and/or assigned a value, but not used.
+    </description>
+<priority>2</priority>
+<example><![CDATA[
+
+public class Something {
+  private static int FOO = 2; // Unused
+  private int i = 5; // Unused
+  private int j = 6;
+  public int addOne() {
+    return j++;
+  }
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.UnusedLocalVariableRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedLocalVariable" message="Avoid unused local variables such as ''{0}''." name="UnusedLocalVariable" since="0.1" typeResolution="true">
+<description>
+Detects when a local variable is declared and/or assigned, but not used.
+    </description>
+<priority>2</priority>
+<example><![CDATA[
+
+public class Foo {
+ public void doSomething() {
+  int i = 5; // Unused
+ }
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.UnusedPrivateMethodRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedPrivateMethod" message="Avoid unused private methods such as ''{0}''." name="UnusedPrivateMethod" since="0.7" typeResolution="true">
+<description>&#13;
+Unused Private Method detects when a private method is declared but is unused.&#13;
+    </description>
+<priority>2</priority>
+<example><![CDATA[
+
+public class Something {
+ private void foo() {} // unused
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.UnusedFormalParameterRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" message="Avoid unused {0} parameters such as ''{1}''." name="UnusedFormalParameter" since="0.8" typeResolution="true">
+<description>
+Avoid passing parameters to methods or constructors and then not using those parameters.
+    </description>
+<priority>2</priority>
+<example><![CDATA[
+
+public class Foo {
+ private void bar(String howdy) {
+  // howdy is not used
+ }
+
+    ]]></example>
+</rule>
+</ruleset>

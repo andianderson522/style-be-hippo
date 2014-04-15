@@ -1,0 +1,965 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns="http://pmd.sf.net/ruleset/1.0.0" name="design-rules" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd" xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
+<description>DesignPMD Rules</description>
+<exclude-pattern>.*</exclude-pattern>
+<include-pattern>.*style3.*.java</include-pattern>
+<rule class="net.sourceforge.pmd.rules.design.UseSingleton" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#UseSingleton" message="All methods are static.  Consider using Singleton instead.  Alternatively, you could add a private constructor or make the class abstract to silence this warning." name="UseSingleton" since="0.3" typeResolution="true">
+<description>
+
+If you have a class that has nothing but static methods, consider making it a Singleton.
+Note that this doesn't apply to abstract classes, since their subclasses may
+well include non-static methods.  Also, if you want this class to be a Singleton,
+remember to add a private constructor to prevent instantiation.
+
+    </description>
+<priority>3</priority>
+<example><![CDATA[
+
+public class MaybeASingleton {
+ public static void foo() {}
+ public static void bar() {}
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.SimplifyBooleanReturns" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#SimplifyBooleanReturns" message="Avoid unnecessary if..then..else statements when returning a boolean" name="SimplifyBooleanReturns" since="0.9" typeResolution="true">
+<description>&#13;
+Avoid unnecessary if..then..else statements when returning a boolean.&#13;
+    </description>
+<priority>1</priority>
+<example><![CDATA[
+
+public class Foo {
+  private int bar =2;
+  public boolean isBarEqualsTo(int x) {
+    // this bit of code
+    if (bar == x) {
+     return true;
+    } else {
+     return false;
+    }
+    // can be replaced with a simple
+    // return bar == x;
+  }
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#SimplifyBooleanExpressions" message="Avoid unnecessary comparisons in boolean expressions" name="SimplifyBooleanExpressions" since="1.05" typeResolution="true">
+<description>&#13;
+Avoid unnecessary comparisons in boolean expressions - this complicates simple code.&#13;
+      </description>
+<priority>5</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//EqualityExpression/PrimaryExpression
+ /PrimaryPrefix/Literal/BooleanLiteral
+
+              ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class Bar {
+ // can be simplified to
+ // bar = isFoo();
+ private boolean bar = (isFoo() == true);
+
+ public isFoo() { return false;}
+}
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#SwitchStmtsShouldHaveDefault" message="Switch statements should have a default label" name="SwitchStmtsShouldHaveDefault" since="1.0" typeResolution="true">
+<description>
+Switch statements should have a default label.
+    </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//SwitchStatement[not(SwitchLabel[@Default='true'])]
+
+              ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+ public void bar() {
+  int x = 2;
+  switch (x) {
+   case 2: int j = 8;
+  }
+ }
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.AvoidDeeplyNestedIfStmtsRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidDeeplyNestedIfStmts" message="Deeply nested if..then statements are hard to read" name="AvoidDeeplyNestedIfStmts" since="1.0" typeResolution="true">
+<description>&#13;
+Deeply nested if..then statements are hard to read.&#13;
+    </description>
+<priority>2</priority>
+<properties>
+<property name="problemDepth" value="6"/>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+ public void bar(int x, int y, int z) {
+  if (x>y) {
+   if (y>z) {
+    if (z==x) {
+     // whew, too deep
+    }
+   }
+  }
+ }
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.AvoidReassigningParameters" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidReassigningParameters" message="Avoid reassigning parameters such as ''{0}''" name="AvoidReassigningParameters" since="1.0" typeResolution="true">
+<description>&#13;
+Reassigning values to parameters is a questionable practice.  Use a temporary local variable instead.&#13;
+    </description>
+<priority>2</priority>
+<example><![CDATA[
+
+public class Foo {
+ private void foo(String bar) {
+  bar = "something else";
+ }
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.design.SwitchDensityRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#SwitchDensity" message="A high ratio of statements to labels in a switch statement.  Consider refactoring." name="SwitchDensity" since="1.02" typeResolution="true">
+<description>A high ratio of statements to labels in a switch statement implies that the switch&#13;
+ statement is doing too much work.  Consider moving the statements into new&#13;
+ methods, or creating subclasses based on the switch variable.</description>
+<priority>2</priority>
+<properties>
+<property name="minimum" value="12"/>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+ public void bar(int x) {
+   switch (x) {
+     case 1: {
+       // lots of statements
+       break;
+     } case 2: {
+       // lots of statements
+       break;
+     }
+   }
+ }
+}
+
+      ]]></example>
+<example><![CDATA[public class Foo {
+ public void bar(int x) {
+   switch (x) {
+     case 1: {
+       // lots of statements
+       break;
+     } case 2: {
+       // lots of statements
+       break;
+     }
+   }
+ }
+}]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.ConstructorCallsOverridableMethod" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ConstructorCallsOverridableMethod" message="Overridable {0} called during object construction" name="ConstructorCallsOverridableMethod" since="1.04" typeResolution="true">
+<description>
+Calling overridable methods during construction poses a risk of invoking methods on an
+incompletely constructed object and can be difficult to discern.
+It may leave the sub-class unable to construct its superclass or forced to
+replicate the construction process completely within itself, losing the ability to call
+super().  If the default constructor contains a call to an overridable method,
+the subclass may be completely uninstantiable.   Note that this includes method calls
+throughout the control flow graph - i.e., if a constructor Foo() calls a private method
+bar() that calls a public method buz(), this denotes a problem.
+      </description>
+<priority>1</priority>
+<example><![CDATA[
+
+public class SeniorClass {
+  public SeniorClass(){
+      toString(); //may throw NullPointerException if overridden
+  }
+  public String toString(){
+    return "IAmSeniorClass";
+  }
+}
+public class JuniorClass extends SeniorClass {
+  private String name;
+  public JuniorClass(){
+    super(); //Automatic call leads to NullPointerException
+    name = "JuniorClass";
+  }
+  public String toString(){
+    return name.toUpperCase();
+  }
+}
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.AccessorClassGeneration" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AccessorClassGeneration" message="Avoid instantiation through private constructors from outside of the constructor's class." name="AccessorClassGeneration" since="1.04" typeResolution="true">
+<description>Instantiation by way of private constructors from outside of the constructor's class often causes the generation of an accessor.&#13;
+A factory method, or non-privitization of the constructor can eliminate this situation.&#13;
+The generated class file is actually an interface.  It gives the accessing class the ability to invoke a new hidden package&#13;
+scope constructor that takes the interface as a supplementary parameter.  This turns a private constructor effectively into&#13;
+one with package scope, and is challenging to discern.</description>
+<priority>2</priority>
+<example><![CDATA[
+
+public class Outer {
+ void method(){
+  Inner ic = new Inner();//Causes generation of accessor class
+ }
+ public class Inner {
+  private Inner(){}
+ }
+}
+
+      ]]></example>
+<example><![CDATA[public class Outer {
+ void method(){
+  Inner ic = new Inner();//Causes generation of accessor class
+ }
+ public class Inner {
+  private Inner(){}
+ }
+}]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#FinalFieldCouldBeStatic" message="This final field could be made static" name="FinalFieldCouldBeStatic" since="1.1" typeResolution="true">
+<description>If a final field is assigned to a compile-time constant, it could be&#13;
+made static, thus saving overhead in each object at runtime.</description>
+<priority>3</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[//FieldDeclaration
+ [@Final='true' and @Static='false']
+ [not (../../../../ClassOrInterfaceDeclaration[@Interface='true'])]
+   /VariableDeclarator/VariableInitializer/Expression
+    /PrimaryExpression/PrimaryPrefix/Literal]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+ public final int BAR = 42; // this could be static and save some space
+}
+
+      ]]></example>
+<example><![CDATA[public class Foo {
+ public final int BAR = 42; // this could be static and save some space
+}]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#NonStaticInitializer" message="Non-static initializers are confusing" name="NonStaticInitializer" since="1.5" typeResolution="true">
+<description>&#13;
+A nonstatic initializer block will be called any time a constructor&#13;
+is invoked (just prior to invoking the constructor).  While this&#13;
+is a valid language construct, it is rarely used and is confusing.&#13;
+       </description>
+<priority>3</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//Initializer[@Static='false']
+
+                 ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class MyClass {
+ // this block gets run before any call to a constructor
+ {
+  System.out.println("I am about to construct myself");
+ }
+}
+
+       ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#DefaultLabelNotLastInSwitchStmt" message="The default label should be the last label in a switch statement" name="DefaultLabelNotLastInSwitchStmt" since="1.5" typeResolution="true">
+<description>By convention, the default label should be the last label in a switch statement.</description>
+<priority>2</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[//SwitchStatement
+ [not(SwitchLabel[position() = last()][@Default='true'])]
+ [SwitchLabel[@Default='true']]]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+ void bar(int a) {
+  switch (a) {
+   case 1:  // do something
+      break;
+   default:  // the default case should be last, by convention
+      break;
+   case 2:
+      break;
+  }
+ }
+}
+       ]]></example>
+<example><![CDATA[public class Foo {
+ void bar(int a) {
+  switch (a) {
+   case 1:  // do something
+      break;
+   default:  // the default case should be last, by convention
+      break;
+   case 2:
+      break;
+  }
+ }
+}]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#NonCaseLabelInSwitchStatement" message="A non-case label was present in a switch statement" name="NonCaseLabelInSwitchStatement" since="1.5" typeResolution="true">
+<description>
+A non-case label (e.g. a named break/continue label) was present in a switch statement.
+This legal, but confusing. It is easy to mix up the case labels and the non-case labels.
+       </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//SwitchStatement//BlockStatement/Statement/LabeledStatement
+
+                 ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+ void bar(int a) {
+  switch (a) {
+   case 1:
+      // do something
+      break;
+   mylabel: // this is legal, but confusing!
+      break;
+   default:
+      break;
+  }
+ }
+}
+
+       ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#OptimizableToArrayCall" message="This call to Collection.toArray() may be optimizable" name="OptimizableToArrayCall" since="1.8" typeResolution="true">
+<description>
+A call to Collection.toArray can use the Collection's size vs an empty Array of the desired type.
+      </description>
+<priority>3</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//PrimaryExpression
+[PrimaryPrefix/Name[ends-with(@Image, 'toArray')]]
+[
+PrimarySuffix/Arguments/ArgumentList/Expression
+ /PrimaryExpression/PrimaryPrefix/AllocationExpression
+ /ArrayDimsAndInits/Expression/PrimaryExpression/PrimaryPrefix/Literal[@Image='0']
+]
+
+
+              ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+class Foo {
+ void bar(Collection x) {
+   // A bit inefficient
+   x.toArray(new Foo[0]);
+   // Much better; this one sizes the destination array, avoiding
+   // a reflection call in some Collection implementations
+   x.toArray(new Foo[x.size()]);
+ }
+}
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#EqualsNull" message="Avoid using equals() to compare against null" name="EqualsNull" since="1.9" typeResolution="true">
+<description>
+Inexperienced programmers sometimes confuse comparison concepts
+and use equals() to compare to null.
+        </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//PrimaryExpression
+ [
+PrimaryPrefix/Name[ends-with(@Image, 'equals')]
+or
+PrimarySuffix[ends-with(@Image, 'equals')]
+]
+[PrimarySuffix/Arguments/ArgumentList[count(Expression)=1]
+  /Expression/PrimaryExpression/PrimaryPrefix
+   /Literal/NullLiteral]
+
+                ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+class Bar {
+   void foo() {
+       String x = "foo";
+       if (x.equals(null)) { // bad!
+        doSomething();
+       }
+   }
+}
+
+        ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidProtectedFieldInFinalClass" message="Avoid protected fields in a final class.  Change to private or package access." name="AvoidProtectedFieldInFinalClass" since="2.1" typeResolution="true">
+<description>
+Do not use protected fields in final classes since they cannot be subclassed.
+Clarify your intent by using private or package access modifiers instead.
+         </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//ClassOrInterfaceDeclaration[@Final='true']
+/ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration
+/FieldDeclaration[@Protected='true']
+
+                 ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public final class Bar {
+ private int x;
+ protected int y;  // <-- Bar cannot be subclassed, so is y really private or package visible???
+ Bar() {}
+}
+
+         ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.design.AssignmentToNonFinalStatic" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AssignmentToNonFinalStatic" message="Possible unsafe assignment to a non-final static field in a constructor." name="AssignmentToNonFinalStatic" since="2.2" typeResolution="true">
+<description>Identifies a possible unsafe usage of a static field.</description>
+<priority>1</priority>
+<example><![CDATA[
+
+public class StaticField {
+   static int x;
+   public FinalFields(int y) {
+    x = y; // unsafe
+   }
+}
+
+       ]]></example>
+<example><![CDATA[public class StaticField {
+   static int x;
+   public FinalFields(int y) {
+    x = y; // unsafe
+   }
+}]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#MissingStaticMethodInNonInstantiatableClass" message="Class cannot be instantiated and does not provide any static methods or fields" name="MissingStaticMethodInNonInstantiatableClass" since="3.0" typeResolution="true">
+<description>
+A class that has private constructors and does not have any static methods or fields cannot be used.
+      </description>
+<priority>3</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//ClassOrInterfaceDeclaration[@Nested='false'][
+( count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration)>0
+  and count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration) = count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration[@Private='true']) )
+and
+count(.//MethodDeclaration[@Static='true'])=0
+and
+count(.//FieldDeclaration[@Private='false'][@Static='true'])=0
+]
+
+              ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+/* This class is unusable, since it cannot be
+ instantiated (private constructor),
+ and no static method can be called.
+ */
+public class Foo {
+ private Foo() {}
+ void foo() {}
+}
+
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidSynchronizedAtMethodLevel" message="Use block level rather than method level synchronization" name="AvoidSynchronizedAtMethodLevel" since="3.0" typeResolution="true">
+<description>
+  Method level synchronization can backfire when new code is added to the method.  Block-level
+  synchronization helps to ensure that only the code that needs synchronization gets it.
+      </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//MethodDeclaration[@Synchronized='true']
+
+              ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+ // Try to avoid this
+ synchronized void foo() {
+ }
+ // Prefer this:
+ void bar() {
+  synchronized(this) {
+  }
+ }
+}
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#MissingBreakInSwitch" message="A switch statement does not contain a break" name="MissingBreakInSwitch" since="3.0" typeResolution="true">
+<description>
+A switch statement without an enclosed break statement may be a bug.
+      </description>
+<priority>3</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//SwitchStatement
+[count(.//BreakStatement)=0]
+[count(SwitchLabel) > 0]
+[count(BlockStatement/Statement/ReturnStatement)
+ + count(BlockStatement/Statement/ThrowStatement)
+     < count (SwitchLabel)]
+
+              ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+ public void bar(int status) {
+  switch(status) {
+   case CANCELLED:
+    doCancelled();
+    // break; hm, should this be commented out?
+   case NEW:
+    doNew();
+   case REMOVED:
+    doRemoved();
+   }
+ }
+}
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#UseNotifyAllInsteadOfNotify" message="Call Thread.notifyAll() rather than Thread.notify()" name="UseNotifyAllInsteadOfNotify" since="3.0" typeResolution="true">
+<description>
+Thread.notify() awakens a thread monitoring the object. If more than one thread is monitoring, then only
+one is chosen.  The thread chosen is arbitrary; thus it's usually safer to call notifyAll() instead.
+      </description>
+<priority>3</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//StatementExpression/PrimaryExpression
+[count(PrimarySuffix/Arguments/ArgumentList) = 0]
+[
+PrimaryPrefix[./Name[@Image='notify' or ends-with(@Image,'.notify')]
+or @Image='notify'
+or (./AllocationExpression and ../PrimarySuffix[@Image='notify'])
+]
+]
+
+              ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+ void bar() {
+  x.notify();
+  // If many threads are monitoring x, only one (and you won't know which) will be notified.
+  // use instead:
+  x.notifyAll();
+ }
+}
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#SimplifyConditional" message="No need to check for null before an instanceof" name="SimplifyConditional" since="3.1" typeResolution="true">
+<description>No need to check for null before an instanceof; the instanceof keyword returns false when given a null argument.</description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[//Expression
+ [ConditionalOrExpression
+ [EqualityExpression[@Image='==']
+  //NullLiteral
+  and
+  UnaryExpressionNotPlusMinus
+   [@Image='!']//InstanceOfExpression[PrimaryExpression
+     //Name/@Image = ancestor::ConditionalOrExpression/EqualityExpression
+      /PrimaryExpression/PrimaryPrefix/Name/@Image]]
+or
+ConditionalAndExpression
+ [EqualityExpression[@Image='!=']//NullLiteral
+ and
+InstanceOfExpression
+ [PrimaryExpression[count(PrimarySuffix[@ArrayDereference='true'])=0]
+  //Name/@Image = ancestor::ConditionalAndExpression
+   /EqualityExpression/PrimaryExpression/PrimaryPrefix/Name/@Image]]]]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+class Foo {
+ void bar(Object x) {
+  if (x != null && x instanceof Bar) {
+   // just drop the "x != null" check
+  }
+ }
+}
+           ]]></example>
+<example><![CDATA[class Foo {
+ void bar(Object x) {
+  if (x != null && x instanceof Bar) {
+   // just drop the "x != null" check
+  }
+ }
+}]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.design.CompareObjectsWithEquals" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#CompareObjectsWithEquals" message="Use equals() to compare object references." name="CompareObjectsWithEquals" since="3.2" typeResolution="true">
+<description>&#13;
+ Use equals() to compare object references; avoid comparing them with ==.&#13;
+  </description>
+<priority>3</priority>
+<example><![CDATA[
+
+class Foo {
+ boolean bar(String a, String b) {
+  return a == b;
+ }
+}
+
+
+  ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#PositionLiteralsFirstInComparisons" message="Position literals first in String comparisons" name="PositionLiteralsFirstInComparisons" since="3.3" typeResolution="true">
+<description>Position literals first in String comparisons - that way if the String is null you won't get a NullPointerException, it'll just return false.</description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[//PrimaryExpression[
+        PrimaryPrefix[Name
+                [
+    (ends-with(@Image, '.equals'))
+                ]
+        ]
+        [
+                   (../PrimarySuffix/Arguments/ArgumentList/Expression/PrimaryExpression/PrimaryPrefix/Literal)
+    and
+    ( count(../PrimarySuffix/Arguments/ArgumentList/Expression) = 1 )
+        ]
+]
+[not(ancestor::Expression/ConditionalAndExpression//EqualityExpression[@Image='!=']//NullLiteral)]
+[not(ancestor::Expression/ConditionalOrExpression//EqualityExpression[@Image='==']//NullLiteral)]]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+class Foo {
+ boolean bar(String x) {
+  return x.equals("2"); // should be "2".equals(x)
+ }
+}
+
+
+  ]]></example>
+<example><![CDATA[class Foo {
+ boolean bar(String x) {
+  return x.equals("2"); // should be "2".equals(x)
+ }
+}]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.design.UnnecessaryLocalBeforeReturn" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#UnnecessaryLocalBeforeReturn" message="Consider simply returning the value vs storing it in local variable ''{0}''" name="UnnecessaryLocalBeforeReturn" since="3.3" typeResolution="true">
+<description>
+Avoid unnecessarily creating local variables
+      </description>
+<priority>3</priority>
+<example><![CDATA[
+
+  public class Foo {
+    public int foo() {
+      int x = doSomething();
+      return x;  // instead, just 'return doSomething();'
+    }
+  }
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#UncommentedEmptyMethod" message="Document empty method" name="UncommentedEmptyMethod" since="3.4" typeResolution="true">
+<description>&#13;
+Uncommented Empty Method finds instances where a method does not contain&#13;
+statements, but there is no comment. By explicitly commenting empty methods&#13;
+it is easier to distinguish between intentional (commented) and unintentional&#13;
+empty methods.&#13;
+      </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//MethodDeclaration/Block[count(BlockStatement) = 0 and @containsComment = 'false']
+
+             ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public void doSomething() {
+}
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AvoidConstantsInterface" message="An Interface should be used only to model a behaviour; consider converting this to a class." name="AvoidConstantsInterface" since="3.5" typeResolution="true">
+<description>An interface should be used only to model a behaviour of a&#13;
+    class: using an interface as a container of constants is a poor usage pattern.</description>
+<priority>2</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[//ClassOrInterfaceDeclaration[@Interface="true"]
+    [
+     count(.//MethodDeclaration)=0
+     and
+     count(.//FieldDeclaration)>0
+    ]]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+    public interface ConstantsInterface {
+     public static final int CONSTANT1=0;
+     public static final String CONSTANT2="1";
+    }
+
+      ]]></example>
+<example><![CDATA[public interface ConstantsInterface {
+     public static final int CONSTANT1=0;
+     public static final String CONSTANT2="1";
+    }]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ClassWithOnlyPrivateConstructorsShouldBeFinal" message="A class which only has private constructors should be final" name="ClassWithOnlyPrivateConstructorsShouldBeFinal" since="4.1" typeResolution="true">
+<description>
+A class with only private constructors should be final, unless the private
+constructor is called by a inner class.
+        </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+TypeDeclaration[count(../TypeDeclaration) = 1]/ClassOrInterfaceDeclaration
+[@Final = 'false']
+[count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration[@Private = 'true']) >= 1 ]
+[count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration[@Public = 'true'])  = 0 ]
+[not(.//ClassOrInterfaceDeclaration)]
+             ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+public class Foo {  //Should be final
+    private Foo() { }
+}
+     ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#EmptyMethodInAbstractClassShouldBeAbstract" message="An empty method in an abstract class should be abstract instead" name="EmptyMethodInAbstractClassShouldBeAbstract" since="4.1" typeResolution="true">
+<description>An empty method in an abstract class should be abstract instead, as developer may rely on this empty implementation&#13;
+rather than code the appropriate one.</description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[//ClassOrInterfaceDeclaration[@Abstract = 'true']
+                        /ClassOrInterfaceBody
+                        /ClassOrInterfaceBodyDeclaration
+                        /MethodDeclaration[@Abstract = 'false' and @Native = 'false']
+                        [
+                            ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal/NullLiteral) = 'true' )
+                            or
+                            ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal[@Image = '0']) = 'true' )
+                            or
+                            ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal[string-length(@Image) = 2]) = 'true' )
+                            or
+                            (
+                                (
+                                    (boolean(./Block/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal[@Image = '']) = 'true' )
+                                )
+                                and
+                                ( count (./Block/*) = 1 )
+                            )
+                            or
+                            ( count (./Block/*) = 0 )
+                        ]]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+                public abstract class ShouldBeAbstract
+                {
+                    public Object couldBeAbstract()
+                    {
+                    // Should be abstract method ?
+                    return null;
+                       }
+
+                    public void couldBeAbstract()
+                    {
+                    }
+                }
+
+        ]]></example>
+<example><![CDATA[public abstract class ShouldBeAbstract
+                {
+                    public Object couldBeAbstract()
+                    {
+                    // Should be abstract method ?
+                    return null;
+                       }
+
+                    public void couldBeAbstract()
+                    {
+                    }
+                }]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#ReturnEmptyArrayRatherThanNull" message="Return an empty array rather than 'null'." name="ReturnEmptyArrayRatherThanNull" since="4.2" typeResolution="true">
+<description>
+
+            For any method that returns an array, it's a better behavior to return an empty array rather than a null reference.
+
+        </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+                        //MethodDeclaration
+                        [
+                        (./ResultType/Type[@Array='true'])
+                        and
+                        (./Block/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal/NullLiteral)
+                        ]
+
+                ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+            public class Example
+            {
+                // Not a good idea...
+                public int []badBehavior()
+                {
+                    // ...
+                    return null;
+                }
+
+                // Good behavior
+                public String[] bonnePratique()
+                {
+                    //...
+                    return new String[0];
+                }
+            }
+
+        ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#AbstractClassWithoutAnyMethod" message="No abstract method which means that the  keyword is most likely used to prevent instantiation. use a private or protected constructor instead." name="AbstractClassWithoutAnyMethod" since="4.2" typeResolution="true">
+<description>
+
+            If the abstract class does not provides any methods, it may be just a data container that is not to be instantiated. In this case, it's probably
+            better to use a private or a protected constructor in order to prevent instantiation than make the class misleadingly abstract.
+
+        </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//ClassOrInterfaceDeclaration[
+    (@Abstract = 'true')
+    and
+    (count(//MethodDeclaration) + count(//ConstructorDeclaration) = 0)
+]
+
+                ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class abstract Example {
+    String field;
+    int otherField;
+}
+
+        ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/design.html#TooFewBranchesForASwitchStatement" message="A switch with less than 3 branches is inefficient, use a if statement instead." name="TooFewBranchesForASwitchStatement" since="4.2" typeResolution="true">
+<description>&#13;
+            &#13;
+                Swith are designed complex branches, and allow branches to share treatement. Using a switch for only 2&#13;
+                branches is ill advised, as switches are not as easy to understand as if. In this case, it's most likely&#13;
+                is a good idea to use a if statement instead, at least to increase code readability.&#13;
+            &#13;
+        </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//SwitchStatement[
+    (count(.//SwitchLabel) < $minimumNumberCaseForASwitch)
+]
+
+                ]]></value>
+</property>
+<property name="minimumNumberCaseForASwitch" value="3"/>
+</properties>
+<example><![CDATA[
+
+public class abstract Example {
+    String field;
+    int otherField;
+}
+
+        ]]></example>
+</rule>
+</ruleset>

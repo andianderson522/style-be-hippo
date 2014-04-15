@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns="http://pmd.sf.net/ruleset/1.0.0" name="string-ruleset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd" xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
+<description>STring PMD Rules</description>
+<exclude-pattern>.*</exclude-pattern>
+<include-pattern>.*style3.*.java</include-pattern>
+<rule class="net.sourceforge.pmd.rules.strings.AvoidDuplicateLiteralsRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/strings.html#AvoidDuplicateLiterals" message="The String literal {0} appears {1} times in this file; the first occurrence is on line {2}" name="AvoidDuplicateLiterals" since="1.0" typeResolution="true">
+<description>
+Code containing duplicate String literals can usually be improved by declaring the String as a constant field.
+    </description>
+<priority>2</priority>
+<properties>
+<property name="threshold" value="4"/>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+ private void bar() {
+    buz("Howdy");
+    buz("Howdy");
+    buz("Howdy");
+    buz("Howdy");
+ }
+ private void buz(String x) {}
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.strings.StringInstantiation" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/strings.html#StringInstantiation" message="Avoid instantiating String objects; this is usually unnecessary." name="StringInstantiation" since="1.0" typeResolution="true">
+<description>
+Avoid instantiating String objects; this is usually unnecessary.
+    </description>
+<priority>2</priority>
+<example><![CDATA[
+
+public class Foo {
+ private String bar = new String("bar"); // just do a String bar = "bar";
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.strings.StringToStringRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/strings.html#StringToString" message="Avoid calling toString() on String objects; this is unnecessary." name="StringToString" since="1.0" typeResolution="true">
+<description>
+    Avoid calling toString() on String objects; this is unnecessary.
+    </description>
+<priority>2</priority>
+<example><![CDATA[
+
+public class Foo {
+ private String baz() {
+  String bar = "howdy";
+  return bar.toString();
+ }
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.strings.UnnecessaryCaseChange" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/strings.html#UnnecessaryCaseChange" message="Using equalsIgnoreCase() is cleaner than using toUpperCase/toLowerCase().equals()." name="UnnecessaryCaseChange" since="3.3" typeResolution="true">
+<description>
+Using equalsIgnoreCase() is faster than using toUpperCase/toLowerCase().equals()
+       </description>
+<priority>2</priority>
+<example><![CDATA[
+
+ public class Foo {
+  public boolean bar(String buz) {
+    // should be buz.equalsIgnoreCase("baz")
+    return buz.toUpperCase().equals("baz");
+    // another unnecessary toUpperCase()
+    // return buz.toUpperCase().equalsIgnoreCase("baz");
+  }
+ }
+
+       ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.strings.UseStringBufferLength" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/strings.html#UseStringBufferLength" message="This is an inefficient use of StringBuffer.toString; call StringBuffer.length instead." name="UseStringBufferLength" since="3.4" typeResolution="true">
+<description>
+ Use StringBuffer.length() to determine StringBuffer length rather than using StringBuffer.toString().equals("")
+          or StringBuffer.toString().length() ==.
+      </description>
+<priority>3</priority>
+<example><![CDATA[
+
+public class Foo {
+ void bar() {
+  StringBuffer sb = new StringBuffer();
+  // this is bad
+  if(sb.toString().equals("")) {}
+  // this is good
+  if(sb.length() == 0) {}
+ }
+}
+
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.strings.AppendCharacterWithChar" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/strings.html#AppendCharacterWithChar" message="Avoid appending characters as strings in StringBuffer.append." name="AppendCharacterWithChar" since="3.5" typeResolution="true">
+<description>
+Avoid concatenating characters as strings in StringBuffer.append.
+    </description>
+<priority>3</priority>
+<example><![CDATA[
+
+public class Foo {
+ void bar() {
+  StringBuffer sb=new StringBuffer();
+  // Avoid this
+  sb.append("a");
+
+  // use instead something like this
+  StringBuffer sb=new StringBuffer();
+  sb.append('a');
+ }
+}
+
+    ]]></example>
+</rule>
+</ruleset>

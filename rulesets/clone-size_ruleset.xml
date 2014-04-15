@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="clone-size_ruleset">
+    <description>Clone Size Rule Sets</description>
+    <exclude-pattern>.*</exclude-pattern>
+    <include-pattern>.*style3.*.java</include-pattern>
+    <rule class="net.sourceforge.pmd.rules.design.LongMethodRule" message="Avoid really long methods." name="ExcessiveMethodLength">
+        <description>
+Violations of this rule usually indicate that the method is doing
+too much.  Try to reduce the method size by creating helper methods and removing any copy/pasted code.
+   </description>
+        <example><![CDATA[
+
+public class Foo {
+ public void doSomething() {
+  System.out.println("Hello world!");
+  System.out.println("Hello world!");
+  // 98 copies omitted for brevity.
+ }
+}
+
+   ]]></example>
+        <priority>3</priority>
+        <properties>
+            <property name="minimum" value="100"/>
+        </properties>
+    </rule>
+    <rule class="net.sourceforge.pmd.rules.design.LongParameterListRule" message="Avoid really long parameter lists." name="ExcessiveParameterList">
+        <description>
+Long parameter lists can indicate that a new object should be created to
+ wrap the numerous parameters.  Basically, try to group the parameters together.
+   </description>
+        <example><![CDATA[
+
+public class Foo {
+ public void addData(
+  int p0, int p1, int p2, int p3, int p4, int p5,
+  int p5, int p6, int p7, int p8, int p9, int p10) {
+  }
+ }
+}
+
+   ]]></example>
+        <priority>4</priority>
+        <properties>
+            <property name="minimum" value="10"/>
+        </properties>
+    </rule>
+    <rule class="net.sourceforge.pmd.rules.design.LongClassRule" message="Avoid really long classes." name="ExcessiveClassLength">
+        <description>
+Long Class files are indications that the class may be trying to
+do too much.  Try to break it down, and reduce the size to something
+manageable.
+   </description>
+        <example><![CDATA[
+
+public class Foo {
+  public void bar() {
+    // 1000 lines of code
+  }
+}
+
+   ]]></example>
+        <priority>3</priority>
+        <properties>
+            <property name="minimum" value="1000"/>
+        </properties>
+    </rule>
+    <rule class="net.sourceforge.pmd.rules.ExcessivePublicCount" message="This class has a bunch of public methods and attributes" name="ExcessivePublicCount">
+        <description>
+A large number of public methods and attributes declared in a class can indicate the
+ class may need to be broken up as increased effort will be required to thoroughly test it.
+    </description>
+        <example><![CDATA[
+
+public class Foo {
+ public String value;
+ public Bar something;
+ public Variable var;
+ // [... more more public attributes ...]
+ public void doWork() {}
+ public void doMoreWork() {}
+ public void doWorkAgain() {}
+ // [... more more public methods ...]
+}
+
+    ]]></example>
+        <priority>3</priority>
+        <properties>
+            <property name="minimum" value="45"/>
+        </properties>
+    </rule>
+    <rule class="net.sourceforge.pmd.rules.design.TooManyFields" message="Too many fields" name="TooManyFields">
+        <description>
+Classes that have too many fields could be redesigned to have fewer fields, possibly
+ through some nested object grouping of some of the information.  For example, a class with
+ city/state/zip fields could instead have one Address field.
+      </description>
+        <example><![CDATA[
+
+public class Person {
+   String one;
+   int two;
+   int three;
+   [... many more public fields ...]
+}
+
+      ]]></example>
+        <priority>3</priority>
+        <properties>
+            <property name="maxfields" value="50"/>
+        </properties>
+    </rule>
+</ruleset>

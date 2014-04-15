@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns="http://pmd.sf.net/ruleset/1.0.0" name="strict-exceptions-rultset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd" xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
+<description>Strict PMD Rules</description>
+<exclude-pattern>.*</exclude-pattern>
+<include-pattern>.*style3.*.java</include-pattern>
+<rule class="net.sourceforge.pmd.rules.strictexception.AvoidCatchingThrowable" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/strictexception.html#AvoidCatchingThrowable" message="A catch statement should never catch throwable since it includes errors." name="AvoidCatchingThrowable" since="1.2" typeResolution="true">
+<description>&#13;
+This is dangerous because it casts too wide a net; it can catch things like OutOfMemoryError.&#13;
+      </description>
+<priority>2</priority>
+<example><![CDATA[
+
+public class Foo {
+ public void bar() {
+  try {
+   // do something
+  } catch (Throwable th) {  //Should not catch throwable
+   th.printStackTrace();
+  }
+ }
+}
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/strictexception.html#AvoidThrowingRawExceptionTypes" message="Avoid throwing raw exception types." name="AvoidThrowingRawExceptionTypes" since="1.8" typeResolution="true">
+<description>
+Avoid throwing certain exception types. Rather than throw a raw RuntimeException, Throwable,
+Exception, or Error, use a subclassed exception or error instead.
+    </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//AllocationExpression
+ /ClassOrInterfaceType[
+ (@Image='Throwable' and count(//ImportDeclaration/Name[ends-with(@Image,'Throwable')]) = 0)
+or
+ (@Image='Exception' and count(//ImportDeclaration/Name[ends-with(@Image,'Exception')]) = 0)
+or
+ (@Image='Error'  and count(//ImportDeclaration/Name[ends-with(@Image,'Error')]) = 0)
+or
+( @Image='RuntimeException'  and count(//ImportDeclaration/Name[ends-with(@Image,'RuntimeException')]) = 0)
+]
+
+        ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+public void bar() throws Exception {
+  throw new Exception();
+ }
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/strictexception.html#DoNotExtendJavaLangError" message="Exceptions should not extend java.lang.Error" name="DoNotExtendJavaLangError" since="4.0" typeResolution="true">
+<description>
+      [
+        Errors are system exceptions. Do not extend them.
+
+    </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//ClassOrInterfaceDeclaration/ExtendsList/ClassOrInterfaceType
+  [@Image="Error" or @Image="java.lang.Error"]
+
+        ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+        public class Foo extends Error { }
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/strictexception.html#DoNotThrowExceptionInFinally" message="A throw statement in a finally block makes the control flow hard to understand." name="DoNotThrowExceptionInFinally" since="4.2" typeResolution="true">
+<description>
+            [
+                  Throwing exception in a finally block is confusing. It may mask exception or a defect of the code,
+                  it also render code cleanup uninstable.
+            Note: This is a PMD implementation of the Lint4j rule "A throw in a finally block"
+
+        </description>
+<priority>1</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//FinallyStatement[descendant::ThrowStatement]
+
+              ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+                public class Foo
+                {
+                    public void bar()
+                    {
+                        try {
+                            // Here do some stuff
+                        }
+                        catch( Exception e) {
+                            // Handling the issue
+                        }
+                        finally
+                        {
+                            // is this really a good idea ?
+                            throw new Exception();
+                        }
+                    }
+                }
+
+        ]]></example>
+</rule>
+</ruleset>

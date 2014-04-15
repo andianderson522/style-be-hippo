@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns="http://pmd.sf.net/ruleset/1.0.0" name="naming-ruleset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd" xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
+<description>Naming PMD Rules</description>
+<exclude-pattern>.*</exclude-pattern>
+<include-pattern>.*style3.*.java</include-pattern>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/naming.html#LongVariable" message="Avoid excessively long variable names like {0}" name="LongVariable" since="0.3" typeResolution="true">
+<description>&#13;
+Detects when a field, formal or local variable is declared with a long name.&#13;
+    </description>
+<priority>3</priority>
+<properties>
+<property name="xpath" pluginname="true">
+<value><![CDATA[
+
+//VariableDeclaratorId[string-length(@Image) > $minimum]
+
+              ]]></value>
+</property>
+<property name="minimum" value="40"/>
+</properties>
+<example><![CDATA[
+
+public class Something {
+  int reallyLongIntName = -3;  // VIOLATION - Field
+  public static void main( String argumentsList[] ) { // VIOLATION - Formal
+    int otherReallyLongName = -5; // VIOLATION - Local
+    for (int interestingIntIndex = 0;  // VIOLATION - For
+             interestingIntIndex < 10;
+             interestingIntIndex ++ ) {
+    }
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.VariableNamingConventions" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/naming.html#VariableNamingConventions" message="{0} variable {1} should begin with {2}" name="VariableNamingConventions" since="1.2" typeResolution="true">
+<description>
+A variable naming conventions rule - customize this to your liking.  Currently, it
+ checks for final variables that should be fully capitalized and non-final variables
+ that should not include underscores.
+        </description>
+<priority>1</priority>
+<properties>
+<property name="staticPrefix" value=""/>
+<property name="staticSuffix" value=""/>
+<property name="memberPrefix" value=""/>
+<property name="memberSuffix" value=""/>
+</properties>
+<example><![CDATA[
+
+public class Foo {
+ public static final int MY_NUM = 0;
+ public String myTest = "";
+ DataModule dmTest = new DataModule();
+}
+
+        ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.MethodNamingConventions" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/naming.html#MethodNamingConventions" message="Method name does not begin with a lower case character." name="MethodNamingConventions" since="1.2" typeResolution="true">
+<description>&#13;
+Method names should always begin with a lower case character, and should not contain underscores.&#13;
+          </description>
+<priority>1</priority>
+<example><![CDATA[
+
+public class Foo {
+ public void fooStuff() {
+ }
+}
+
+          ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.ClassNamingConventions" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/naming.html#ClassNamingConventions" message="Class names should begin with an uppercase character" name="ClassNamingConventions" since="1.2" typeResolution="true">
+<description>
+Class names should always begin with an upper case character.
+      </description>
+<priority>1</priority>
+<example><![CDATA[
+
+public class Foo {}
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/naming.html#AbstractNaming" message="Abstract classes should be named 'AbstractXXX'" name="AbstractNaming" since="1.4" typeResolution="true">
+<description>
+Abstract classes should be named 'AbstractXXX'.
+       </description>
+<priority>4</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//ClassOrInterfaceDeclaration
+ [@Abstract='true' and @Interface='false']
+ [not (starts-with(@Image,'Abstract'))]
+
+                ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+public abstract class Foo { // should be AbstractFoo
+}
+
+       ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.MethodWithSameNameAsEnclosingClass" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/naming.html#MethodWithSameNameAsEnclosingClass" message="Classes should not have non-constructor methods with the same name as the class" name="MethodWithSameNameAsEnclosingClass" since="1.5" typeResolution="true">
+<description>&#13;
+Non-constructor methods should not have the same name as the enclosing class.&#13;
+       </description>
+<priority>1</priority>
+<example><![CDATA[
+
+public class MyClass {
+ // this is bad because it is a method
+ public void MyClass() {}
+ // this is OK because it is a constructor
+ public MyClass() {}
+}
+
+       ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.AvoidFieldNameMatchingTypeName" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/naming.html#AvoidFieldNameMatchingTypeName" message="It is somewhat confusing to have a field name matching the declaring class name" name="AvoidFieldNameMatchingTypeName" since="3.0" typeResolution="true">
+<description>
+It is somewhat confusing to have a field name matching the declaring class name.
+This probably means that type and or field names could be more precise.
+      </description>
+<priority>1</priority>
+<example><![CDATA[
+
+public class Foo extends Bar {
+ // There's probably a better name for foo
+ int foo;
+}
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.AvoidFieldNameMatchingMethodName" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/naming.html#AvoidFieldNameMatchingMethodName" message="It is somewhat confusing to have a field name with the same name as a method" name="AvoidFieldNameMatchingMethodName" since="3.0" typeResolution="true">
+<description>
+It is somewhat confusing to have a field name with the same name as a method.
+While this is totally legal, having information (field) and actions (method) is
+not clear naming.
+      </description>
+<priority>2</priority>
+<example><![CDATA[
+
+public class Foo {
+    Object bar;
+    // bar is data or an action or both?
+    void bar() {
+    }
+}
+
+      ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/naming.html#NoPackage" message="All classes and interfaces must belong to a named package" name="NoPackage" since="3.3" typeResolution="true">
+<description>
+Detects when a class or interface does not have a package definition.
+    </description>
+<priority>3</priority>
+<properties>
+<property name="xpath" pluginname="true">
+<value><![CDATA[
+
+//ClassOrInterfaceDeclaration[count(preceding::PackageDeclaration) = 0]
+
+              ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+// no package declaration
+public class ClassInDefaultPackage {
+}
+
+    ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/naming.html#PackageCase" message="Package name contains upper case characters" name="PackageCase" since="3.3" typeResolution="true">
+<description>
+    Detects when a package definition contains upper case characters.
+        </description>
+<priority>3</priority>
+<properties>
+<property name="xpath" pluginname="true">
+<value><![CDATA[
+
+//PackageDeclaration/Name[lower-case(@Image)!=@Image]
+
+                  ]]></value>
+</property>
+</properties>
+<example><![CDATA[
+
+package com.MyCompany;  // <- should be lower case name
+public class SomeClass {
+}
+
+        ]]></example>
+</rule>
+<rule class="net.sourceforge.pmd.rules.XPathRule" dfa="false" externalInfoUrl="http://pmd.sourceforge.net/rules/naming.html#BooleanGetMethodName" message="A 'getX()' method which returns a boolean should be named 'isX()'" name="BooleanGetMethodName" since="4.0" typeResolution="true">
+<description>
+Looks for methods named 'getX()' with 'boolean' as the return type. The convention
+is to name these methods 'isX()'.
+        </description>
+<priority>4</priority>
+<properties>
+<property name="xpath">
+<value><![CDATA[
+
+//MethodDeclaration[
+MethodDeclarator[count(FormalParameters/FormalParameter) = 0 or $checkParameterizedMethods = 'true']
+                [starts-with(@Image, 'get')]
+and
+ResultType/Type/PrimitiveType[@Image = 'boolean']
+]
+
+                ]]></value>
+</property>
+<property name="checkParameterizedMethods" value="false"/>
+</properties>
+<example><![CDATA[
+
+public boolean getFoo(); // bad
+public boolean isFoo(); // ok
+public boolean getFoo(boolean bar); // ok, unless checkParameterizedMethods=true
+     ]]></example>
+</rule>
+</ruleset>
