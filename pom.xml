@@ -11,6 +11,27 @@
 		<module>style-be-parent/stubjava</module>
 		<module>style-hippo-parent/stubhippo</module>
 	</modules>
+	<scm>
+		<connection>scm:git:ssh://git@github.com:andianderson522/style-be-hippo.git</connection>
+		<url>https://github.com/andianderson522/style-be-hippo</url>
+		<developerConnection>scm:git:ssh://git@github.com:andianderson522/style-be-hippo.git</developerConnection>
+	</scm>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<releaseProfiles>release</releaseProfiles>
+					<goals>deploy</goals>
+					<useReleaseProfile>false</useReleaseProfile>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<tagBase>style-be-hippo</tagBase>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<distributionManagement>
 		<repository>
 			<id>repo.conde-dev.com-webdav-releases</id>
