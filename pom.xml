@@ -17,9 +17,9 @@
 		<module>style-hippo-parent/stubhippo</module>
 	</modules>
 	<scm>
-		<connection>scm:git:ssh://git@github.com:andianderson522/style-be-hippo.git</connection>
+		<connection>scm:git:ssh://git@github.com/andianderson522/style-be-hippo.git</connection>
 		<url>https://github.com/andianderson522/style-be-hippo</url>
-		<developerConnection>scm:git:ssh://git@github.com:andianderson522/style-be-hippo.git</developerConnection>
+		<developerConnection>scm:git:ssh://git@github.com/andianderson522/style-be-hippo.git</developerConnection>
 	</scm>
 	<build>
 		<plugins>
