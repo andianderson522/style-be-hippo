@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>com.condenast.style.riverhorse</groupId>
 		<artifactId>style-aggregator</artifactId>
-		<version>1.0.3-SNAPSHOT</version>
+		<version>1.0.3</version>
 	</parent>
 	<artifactId>style-be-parent</artifactId>
 	<packaging>pom</packaging>

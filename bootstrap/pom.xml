@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.condenast.style.riverhorse</groupId>
 		<artifactId>style-aggregator</artifactId>
-		<version>1.0.3-SNAPSHOT</version>
+		<version>1.0.3</version>
 	</parent>
 	<name>Hippo Project Bootstrap</name>
 	<description>Hippo Project Bootstrap</description>

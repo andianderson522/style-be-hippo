@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>com.condenast.style.riverhorse</groupId>
 		<artifactId>style-be-parent</artifactId>
-		<version>1.0.3-SNAPSHOT</version>
+		<version>1.0.3</version>
 	</parent>
 	<artifactId>stubjava</artifactId>
 	<name>stubjava</name>
