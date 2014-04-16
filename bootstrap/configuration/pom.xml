@@ -5,6 +5,7 @@
 		<groupId>com.condenast.style.riverhorse</groupId>
 		<artifactId>style-aggregator</artifactId>
 		<version>1.0.3-SNAPSHOT</version>
+		<relativePath>../../</relativePath>
 	</parent>
 	<name>Hippo Project Bootstrap Configuration</name>
 	<description>Hippo Project Bootstrap Configuration</description>
