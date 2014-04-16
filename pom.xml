@@ -16,6 +16,7 @@
 		<module>style-be-parent/stubjava</module>
 		<!-- HIPPO modules here -->
 		<module>bootstrap</module>
+		<module>bootstrap/configuration</module>
 		<module>style-hippo-parent/stubhippo</module>
 	</modules>
 	<scm>
